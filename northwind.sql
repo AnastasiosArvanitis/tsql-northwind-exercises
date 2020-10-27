@@ -61,4 +61,19 @@ SET @custId = 'ALFKI';
 SELECT * FROM Customers
 WHERE CustomerID LIKE @custId;
 
+-- sum of each product that every company ordered
+SELECT c.CompanyName, p.ProductName, SUM(od.UnitPrice) AS Total
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+JOIN Products p ON od.ProductID = p.ProductID
+GROUP BY c.CompanyName, p.ProductName
+ORDER BY 1 ASC, 3 DESC;
 
+-- sum of each company
+SELECT c.CompanyName, SUM(od.UnitPrice) AS Total
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+GROUP BY c.CompanyName
+ORDER BY 1 ASC, 2 DESC;
