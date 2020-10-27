@@ -27,3 +27,13 @@ SELECT c.ContactName, p.ProductName,
         WHERE p.UnitPrice > 20
         ORDER BY 3 DESC;
 
+SELECT c.ContactName, p.ProductName, od.UnitPrice
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+JOIN Products p ON od.ProductID = p.ProductID
+WHERE od.UnitPrice > (
+    SELECT AVG(UnitPrice)
+    FROM [Order Details]
+) ORDER BY 3;
+
