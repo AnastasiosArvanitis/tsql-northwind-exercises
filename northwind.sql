@@ -43,6 +43,8 @@ FROM [Order Details];
 
 SELECT * FROM #T1;
 
+SELECT * FROM Customers;
+
 SELECT c.ContactName, p.ProductName, od.UnitPrice
 FROM Customers c
 JOIN Orders o ON c.CustomerID = o.CustomerID
@@ -51,3 +53,12 @@ JOIN Products p ON od.ProductID = p.ProductID
 CROSS JOIN #T1
 WHERE od.UnitPrice > #T1.average
 ORDER BY 3;
+
+DECLARE @custId NCHAR(5);
+
+SET @custId = 'ALFKI';
+
+SELECT * FROM Customers
+WHERE CustomerID LIKE @custId;
+
+
