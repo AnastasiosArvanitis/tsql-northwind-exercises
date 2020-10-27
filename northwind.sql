@@ -37,3 +37,17 @@ WHERE od.UnitPrice > (
     FROM [Order Details]
 ) ORDER BY 3;
 
+SELECT AVG(UnitPrice) as average
+INTO #T1
+FROM [Order Details];
+
+SELECT * FROM #T1;
+
+SELECT c.ContactName, p.ProductName, od.UnitPrice
+FROM Customers c
+JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+JOIN Products p ON od.ProductID = p.ProductID
+CROSS JOIN #T1
+WHERE od.UnitPrice > #T1.average
+ORDER BY 3;
