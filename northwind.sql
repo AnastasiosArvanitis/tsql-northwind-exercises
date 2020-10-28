@@ -125,3 +125,100 @@ JOIN Orders o ON e.EmployeeID = o.EmployeeID
 JOIN [Order Details] od ON o.OrderID = od.OrderID
 GROUP BY e.LastName, e.FirstName, e.Title
 ORDER BY 1 ASC;
+
+SELECT CompanyName, ContactName
+FROM Customers
+WHERE CustomerID IN (
+    SELECT CustomerID
+    FROM Orders
+    WHERE OrderID IN (
+        SELECT OrderID
+        FROM [Order Details]
+        WHERE Quantity > (
+            SELECT AVG(Quantity)
+            FROM [Order Details]
+        )
+    )
+);
+
+SELECT CompanyName
+FROM Customers
+WHERE CustomerID IN (
+    SELECT CustomerId
+    FROM Orders
+    WHERE Orders.CustomerID = Customers.CustomerID
+    AND OrderDate BETWEEN '1997-04-01' AND '1997-04-30'
+);
+
+SELECT ProductName
+FROM Products
+WHERE NOT EXISTS (
+    SELECT ProductID
+    FROM [Order Details]
+    JOIN Orders ON Orders.OrderID = [Order Details].OrderID
+    WHERE [Order Details].ProductID = Products.ProductID
+    AND OrderDate BETWEEN '1997-04-01' AND '1997-04-30'
+);
+
+SELECT CompanyName
+FROM Suppliers
+WHERE SupplierID IN (
+    SELECT SupplierID
+    FROM Products
+    WHERE UnitPrice > 50
+);
+
+SELECT CompanyName
+FROM Suppliers
+WHERE EXISTS (
+    SELECT ProductID
+    FROM Products
+    WHERE Products.SupplierID = Suppliers.SupplierID
+    AND convert(numeric(10,4), UnitPrice, 1)  > 10
+);
+
+SELECT s.CompanyName, p.ProductName, p.UnitPrice
+FROM Suppliers s
+JOIN Products p ON s.SupplierID = p.SupplierID
+WHERE EXISTS (
+    SELECT ProductID
+    FROM Products, Suppliers
+    WHERE Products.SupplierID = Suppliers.SupplierID
+    AND convert(numeric(6,4), UnitPrice, 1)  > 10
+)
+ORDER BY 1;
+
+SELECT * FROM Products;
+
+SELECT s.CompanyName
+FROM Suppliers s
+WHERE NOT EXISTS (
+    SELECT p.ProductID
+    FROM Products p
+    JOIN [Order Details] od ON p.ProductID = od.ProductID
+    JOIN Orders o ON od.OrderID = o.OrderID
+    WHERE s.SupplierID = p.SupplierID
+    AND o.OrderDate BETWEEN '1996-12-01'
+            AND '1996-12-31' 
+) ;
+
+
+SELECT c.ContactName, p.ProductName, o.OrderDate
+FROM Customers c 
+JOIN Orders o ON c.CustomerID = o.CustomerID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+JOIN Products p ON od.ProductID = p.ProductID
+WHERE o.OrderDate BETWEEN '1996-12-01'
+            AND '1996-12-31' 
+ORDER BY 1;
+
+SELECT CONCAT_WS(' ', s.CompanyName, s.City) 
+    AS "Suppliers and their Cities"
+FROM Suppliers s
+UNION
+SELECT CONCAT_WS(' ', c.CompanyName, c.City) 
+AS "Customers and their Cities" 
+FROM Customers c;
+
+
+SELECT * FROM Suppliers;
