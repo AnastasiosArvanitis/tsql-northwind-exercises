@@ -14,8 +14,8 @@ WHERE Region IS NOT NULL;
 
 select p.ProductName, c.CategoryName, s.CompanyName
 FROM Products p
-INNER JOIN Categories c ON p.CategoryID = c.CategoryID
-INNER JOIN Suppliers s on p.SupplierID = s.SupplierID
+INNER JOIN Categories c ON p.CategoryID = c.CategoryID 
+INNER JOIN Suppliers s on p.SupplierID = s.SupplierID 
 ORDER BY 3; 
 
 SELECT c.ContactName, p.ProductName, 
@@ -102,3 +102,26 @@ ORDER BY 1 ASC, 3 DESC;
 
 SELECT AVG(UnitPrice)
             FROM [Order Details]
+
+SELECT * FROM Territories;
+
+SELECT t.TerritoryDescription, r.RegionDescription
+FROM Territories t
+JOIN Region r on t.RegionID = r.RegionID
+ORDER BY 1 ASC;
+
+SELECT CONCAT_WS(' ', e.LastName, e.FirstName) AS "Full Name",
+ e.Title, SUM(od.UnitPrice) AS "Total Sales"
+FROM Employees e
+JOIN Orders o ON e.EmployeeID = o.EmployeeID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+GROUP BY e.LastName, e.FirstName, e.Title
+ORDER BY 1 ASC;
+
+SELECT CONCAT_WS(' ', e.LastName, e.FirstName) AS "Full Name", 
+e.Title, SUM(od.UnitPrice) - SUM(od.Discount) AS "Total - Discount"
+FROM Employees e
+JOIN Orders o ON e.EmployeeID = o.EmployeeID
+JOIN [Order Details] od ON o.OrderID = od.OrderID
+GROUP BY e.LastName, e.FirstName, e.Title
+ORDER BY 1 ASC;
