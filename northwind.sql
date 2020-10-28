@@ -222,3 +222,29 @@ FROM Customers c;
 
 
 SELECT * FROM Suppliers;
+
+-------------------------------------------------
+-------         Make a receipt           -------- 
+-------------------------------------------------
+
+SELECT o.OrderID, o.OrderDate, 
+        p.ProductName, od.Quantity,
+        od.UnitPrice, od.Discount, 
+        (od.UnitPrice - od.Discount) AS "Price without disc",
+        o.OrderDate, o.ShippedDate, c.CompanyName AS "Customer's Company",
+        CONCAT_WS(' ', e.LastName, e.FirstName) AS "Employee"
+    FROM Products p
+    JOIN [Order Details] od ON p.ProductID = od.ProductID
+    JOIN Orders o ON od.OrderID = o.OrderID
+    JOIN Customers c ON o.CustomerID = c.CustomerID
+    JOIN Employees e ON o.EmployeeID = e.EmployeeID
+    WHERE o.OrderID = 10249;
+
+-- Executing Functions
+SELECT * FROM Orders;
+SELECT * FROM Customers;
+
+SELECT * FROM dbo.Receipt(10255);
+
+SELECT * FROM dbo.find_client3('Maria Anders');
+SELECT * FROM dbo.find_client3('Antonio Moreno');
