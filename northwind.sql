@@ -244,7 +244,7 @@ SELECT o.OrderID, o.OrderDate,
 SELECT * FROM Orders;
 SELECT * FROM Customers;
 
-SELECT * FROM dbo.Receipt(10255);
+SELECT * FROM dbo.Receipt(10256);
 
 SELECT * FROM dbo.find_client3('Maria Anders');
 SELECT * FROM dbo.find_client3('Antonio Moreno');
